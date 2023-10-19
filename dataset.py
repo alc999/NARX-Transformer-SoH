@@ -1,4 +1,4 @@
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 
 class BatteryDataset(Dataset):
     def __init__(self, battery_dict, num_cycles):
