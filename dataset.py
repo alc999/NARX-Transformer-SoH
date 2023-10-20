@@ -1,6 +1,6 @@
 from torch.utils.data import Dataset
 
-def load_NASA(scale_data=True):
+def load_NASA(folder, scale_data=True):
     pass
     
 class BatteryDataset(Dataset):
