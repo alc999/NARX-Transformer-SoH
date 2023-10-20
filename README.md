@@ -2,7 +2,7 @@
 
 ### To-Do
 - [ ] Model Training
-- [ ] Data Visualizasion
+- [ ] Data Visualization
 - [ ] Model Structure
 
 ### Reference
