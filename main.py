@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from glob import glob
+from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 
 import torch
@@ -11,13 +12,15 @@ from torch.utils.data import DataLoader
 from model import CNN_Transformer
 from dataset import load_NASA, BatteryDataset
 
+
+NUM_CYCLES = 3
 # Load data
 battery_dict = load_NASA(folder='NASA_DATA', scale_data=True)
-dataset = BatteryDataset(battery_dict, num_cycles=3)
+dataset = BatteryDataset(battery_dict, num_cycles=NUM_CYCLES)
 dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
 
 # NN model
-model = CNN_Transformer()
+model = CNN_Transformer(num_cycles=NUM_CYCLES)
 
 # Loss function and optimizer
 criterion = nn.MSELoss()
@@ -28,27 +31,27 @@ num_epochs = 10
 
 # Training loop
 model.train()
-for epoch in range(num_epochs):    
+for epoch in tqdm(range(num_epochs)):    
     for inputs, outputs in dataloader:
         # Convert inputs and outputs to PyTorch tensors
-        inputs = torch.tensor(inputs, dtype=torch.float32)
-        outputs = torch.tensor(outputs, dtype=torch.float32)
-        
+        inputs = inputs.float()
+        outputs = outputs.float()
+
         # Zero the gradients
         optimizer.zero_grad()
-        
+
         # Forward pass
-        predicted_outputs = model(inputs, outputs[:-1])
-        
+        predicted_outputs = model(inputs, outputs[:,:-1])
+
         # Compute the loss
-        loss = criterion(predicted_outputs, outputs[-1])
-        
+        loss = criterion(predicted_outputs, outputs[:,-1].unsqueeze(-1))
+
         # Backward pass
         loss.backward()
-        
+
         # Update the weights
         optimizer.step()
-        
+
     # Print the loss for monitoring after each epoch
     print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item()}")
 
