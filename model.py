@@ -5,7 +5,7 @@ class CNN_Transformer(nn.Module):
     def __init__(self, num_cycles):
         super(CNN_Transformer, self).__init__()
 
-        self.cap_linear_layer = nn.Linear(num_cycles, 512)
+        self.cap_linear_layer = nn.Linear(num_cycles-1, 512)
         self.final_linear_layer = nn.Linear(512, 1)
 
         # self.conv_layer = nn.Conv1d(3, 512, kernel_size=16, stride=8)
