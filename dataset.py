@@ -1,5 +1,8 @@
 from torch.utils.data import Dataset
 
+def load_NASA(scale_data=True):
+    pass
+    
 class BatteryDataset(Dataset):
     def __init__(self, battery_dict, num_cycles):
         self.battery_data = []
