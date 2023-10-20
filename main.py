@@ -1,8 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 from glob import glob
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
 import torch
@@ -11,31 +9,10 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 
 from model import CNN_Transformer
-from dataset import BatteryDataset
+from dataset import load_NASA, BatteryDataset
 
 # Load data
-charge_data = pd.read_csv('charge_data.csv')
-data_x = np.load('data_x.npy')
-data_y = np.load('data_y.npy')
-
-sc_voltage = MinMaxScaler(feature_range=(-1,1))
-sc_current = MinMaxScaler(feature_range=(-1,1))
-sc_temp    = MinMaxScaler(feature_range=(-1,1))
-
-data_x[:,:,0] = sc_voltage.fit_transform(data_x[:,:,0])
-data_x[:,:,1] = sc_current.fit_transform(data_x[:,:,1])
-data_x[:,:,2] = sc_temp.fit_transform(data_x[:,:,2])
-
-battery_dict = {}
-for name in np.unique(charge_data['Battery_id']):
-    battery_dict[name] = {}
-    battery_dict[name]['data'] = data_x[charge_data[charge_data['Battery_id']==name].index]
-    battery_dict[name]['cap']  = data_y[charge_data[charge_data['Battery_id']==name].index]
-
-    idx,_,_ = np.where(np.isnan(battery_dict[name]['data']))
-    battery_dict[name]['data'] = np.delete(battery_dict[name]['data'], idx, axis=0)
-    battery_dict[name]['cap'] = np.delete(battery_dict[name]['cap'], idx, axis=0)
-
+battery_dict = load_NASA(folder='NASA_DATA', scale_data=True)
 dataset = BatteryDataset(battery_dict, num_cycles=3)
 dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
 
