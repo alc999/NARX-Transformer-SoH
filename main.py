@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from glob import glob
 from tqdm import tqdm
+import yaml
 from sklearn.model_selection import train_test_split
 
 import torch
@@ -12,14 +13,20 @@ from torch.utils.data import DataLoader
 from model import CNN_Transformer
 from dataset import load_NASA, BatteryDataset
 
+# Load the YAML configuration file
+with open('config.yaml', 'r') as file:
+    cfg = yaml.safe_load(file)
 
-NUM_CYCLES = 3
-EPOCHS = 10
-LEARNING_RATE = 1e-3
+# # Access the variables
+NUM_CYCLES = cfg['NUM_CYCLES']
+EPOCHS = cfg['EPOCHS']
+LEARNING_RATE = cfg['LEARNING_RATE']
+BATCH_SIZE = cfg['BATCH_SIZE']
+
 # Load data
 battery_dict = load_NASA(folder='NASA_DATA', scale_data=True)
 dataset = BatteryDataset(battery_dict, num_cycles=NUM_CYCLES)
-dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
+dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 # NN model
 model = CNN_Transformer(num_cycles=NUM_CYCLES)

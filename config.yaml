@@ -1,0 +1,12 @@
+# Configuration file in YAML format
+
+# Dataset settings
+NUM_CYCLES: 3
+
+# Training settings
+EPOCHS: 10
+LEARNING_RATE: 0.001
+
+# Other settings
+BATCH_SIZE: 32
+USE_GPU: true
