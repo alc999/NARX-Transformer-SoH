@@ -14,6 +14,8 @@ from dataset import load_NASA, BatteryDataset
 
 
 NUM_CYCLES = 3
+EPOCHS = 10
+LEARNING_RATE = 1e-3
 # Load data
 battery_dict = load_NASA(folder='NASA_DATA', scale_data=True)
 dataset = BatteryDataset(battery_dict, num_cycles=NUM_CYCLES)
@@ -24,14 +26,11 @@ model = CNN_Transformer(num_cycles=NUM_CYCLES)
 
 # Loss function and optimizer
 criterion = nn.MSELoss()
-optimizer = optim.Adam(model.parameters(), lr=1e-3)
-
-# Define the number of epochs for training
-num_epochs = 10
+optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
 # Training loop
 model.train()
-for epoch in tqdm(range(num_epochs)):    
+for epoch in tqdm(range(EPOCHS)):    
     for inputs, outputs in dataloader:
         # Convert inputs and outputs to PyTorch tensors
         inputs = inputs.float()
@@ -53,7 +52,7 @@ for epoch in tqdm(range(num_epochs)):
         optimizer.step()
 
     # Print the loss for monitoring after each epoch
-    print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item()}")
+    print(f"Epoch [{epoch+1}/{EPOCHS}], Loss: {loss.item()}")
 
 # After the training loop, you can save the trained model if needed
 torch.save(model.state_dict(), 'trained_model.pth')
