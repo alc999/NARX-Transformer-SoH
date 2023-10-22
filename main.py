@@ -19,6 +19,7 @@ with open('config.yaml', 'r') as file:
 
 # # Access the variables
 NUM_CYCLES = cfg['NUM_CYCLES']
+FEATURE_DIM = cfg['NUM_CYCLES']
 EPOCHS = cfg['EPOCHS']
 LEARNING_RATE = cfg['LEARNING_RATE']
 BATCH_SIZE = cfg['BATCH_SIZE']
@@ -29,7 +30,7 @@ dataset = BatteryDataset(battery_dict, num_cycles=NUM_CYCLES)
 dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 # NN model
-model = CNN_Transformer(num_cycles=NUM_CYCLES)
+model = CNN_Transformer(feature_dim=FEATURE_DIM, num_cycles=NUM_CYCLES)
 
 # Loss function and optimizer
 criterion = nn.MSELoss()

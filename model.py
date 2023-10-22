@@ -2,16 +2,16 @@ import torch
 import torch.nn as nn
 
 class CNN_Transformer(nn.Module):
-    def __init__(self, num_cycles):
+    def __init__(self, feature_dim, num_cycles):
         super(CNN_Transformer, self).__init__()
 
-        self.cap_linear_layer = nn.Linear(num_cycles-1, 512)
-        self.final_linear_layer = nn.Linear(512, 1)
+        self.cap_linear_layer = nn.Linear(num_cycles-1, feature_dim)
+        self.final_linear_layer = nn.Linear(feature_dim, 1)
 
         # self.conv_layer = nn.Conv1d(3, 512, kernel_size=16, stride=8)
-        self.conv_layer = nn.Conv2d(num_cycles, 512, kernel_size=3, stride=8)
-        self.encoder_layer = nn.TransformerEncoderLayer(d_model=512, nhead=8, batch_first=True)
-        self.decoder_layer = nn.TransformerDecoderLayer(d_model=512, nhead=8, batch_first=True)
+        self.conv_layer = nn.Conv2d(num_cycles, feature_dim, kernel_size=3, stride=8)
+        self.encoder_layer = nn.TransformerEncoderLayer(d_model=feature_dim, nhead=8, batch_first=True)
+        self.decoder_layer = nn.TransformerDecoderLayer(d_model=feature_dim, nhead=8, batch_first=True)
 
     def forward(self, my_data, capacity):
         embedded_data = self.conv_layer(my_data).squeeze(-1)

@@ -2,6 +2,7 @@
 
 # Dataset settings
 NUM_CYCLES: 3
+FEATURE_DIM: 64
 
 # Training settings
 EPOCHS: 10
