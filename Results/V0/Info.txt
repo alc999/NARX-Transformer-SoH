@@ -3,8 +3,7 @@ Base Model
 conf:
 # Dataset settings
 NUM_CYCLES: 3
-FEATURE_DIM1: 8
-FEATURE_DIM2: 16
+FEATURE_DIM: 16
 NUM_ATTENTION: 8
 
 # Training settings
