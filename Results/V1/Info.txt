@@ -1,0 +1,18 @@
+base = V0
+
+edited:
+conv 3 to 8 with ketnel 3 stride 1 and pedding 1
+conv 8 to 16 with ketnel 3 No more options
+
+squeeze -1 on conv 8 to 16 in forward
+
+
+conf:
+NUM_CYCLES: 3
+FEATURE_DIM1: 8
+FEATURE_DIM2: 16
+NUM_ATTENTION: 8
+
+
+result:
+train loss: 9.291809715250565e-06, test loss: 0.00019971728615928442

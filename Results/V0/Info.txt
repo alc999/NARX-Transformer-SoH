@@ -1,0 +1,19 @@
+Base Model
+
+conf:
+# Dataset settings
+NUM_CYCLES: 3
+FEATURE_DIM1: 8
+FEATURE_DIM2: 16
+NUM_ATTENTION: 8
+
+# Training settings
+EPOCHS: 2000
+LEARNING_RATE: 0.001
+
+# Other settings
+BATCH_SIZE: 64
+USE_GPU: true
+
+result:
+train loss: 4.866349745498155e-05, test loss: 0.00020985587034374475
