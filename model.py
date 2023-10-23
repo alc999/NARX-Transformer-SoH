@@ -9,7 +9,7 @@ class CNN_Transformer(nn.Module):
         self.final_linear_layer = nn.Linear(feature_dim, 1)
 
         # self.conv_layer = nn.Conv1d(3, 512, kernel_size=16, stride=8)
-        self.conv_layer = nn.Conv2d(num_cycles, feature_dim, kernel_size=3, stride=8)
+        self.conv_layer = nn.Conv2d(num_cycles, feature_dim, kernel_size=3, stride=4)
         self.encoder_layer = nn.TransformerEncoderLayer(d_model=feature_dim, nhead=8, batch_first=True)
         self.decoder_layer = nn.TransformerDecoderLayer(d_model=feature_dim, nhead=8, batch_first=True)
 
