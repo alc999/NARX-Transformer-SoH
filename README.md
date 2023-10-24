@@ -7,6 +7,11 @@
 - [x] Model Structure
 - [ ] Avoid Noisy Output
 
+### Model Structures
+| Conv | Transformer | Train Loss | Test Loss | B0018 |
+| --- | --- | --- | --- | --- |
+| 16 | 16 | 4e-5 | 2e-4 | - |
+
 ### Reference
 1. Fan, Y., Xiao, F., Li, C., Yang, G., & Tang, X. (2020). A novel deep learning framework for state of health estimation of lithium-ion battery. Journal of Energy Storage, 32, 101741.
 2. Gu, X., See, K. W., Li, P., Shan, K., Wang, Y., Zhao, L., ... & Zhang, N. (2023). A novel state-of-health estimation for the lithium-ion battery using a convolutional neural network and transformer model. Energy, 262, 125501.
