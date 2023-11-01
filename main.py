@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from glob import glob
 from tqdm import tqdm, trange
 import yaml
-from sklearn.model_selection import train_test_split
 
 import torch
 import torch.nn as nn
@@ -11,7 +10,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 
 from model import CNN_Transformer
-from dataset import load_NASA, BatteryDataset
+from dataset import load_NASA
 
 # Load the YAML configuration file
 with open('config.yaml', 'r') as file:
@@ -28,12 +27,9 @@ BATCH_SIZE = cfg['BATCH_SIZE']
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Load data
-battery_dict = load_NASA(folder='NASA_DATA', scale_data=True)
-battery_dict_no18 = {key: val for key, val in battery_dict.items() if key != 'B0018'}
-dataset = BatteryDataset(battery_dict_no18, num_cycles=NUM_CYCLES)
+train_dataset, test_dataset = load_NASA(folder='NASA_DATA', num_cycles=3, split_ratio=0.2, scale_data=True)
 
 # Train/test split
-train_dataset, test_dataset = train_test_split(dataset, test_size=0.2, random_state=42)
 train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 test_dataloader  = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
