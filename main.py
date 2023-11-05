@@ -75,4 +75,7 @@ for epoch in t_range:
     # Check if the current loss is the best so far
     if np.mean(test_losses) < best_loss:
         best_loss = np.mean(test_losses)
-        torch.save(model, 'trained_model.pt')
+        best_loss_text = str(best_loss).split('.')
+        best_loss_text = best_loss_text[1]
+        torch.save(model, f'trained_model{best_loss_text[:5]}.pt')
+        
