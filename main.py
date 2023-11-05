@@ -18,7 +18,8 @@ with open('config.yaml', 'r') as file:
 
 # # Access the variables
 NUM_CYCLES = cfg['NUM_CYCLES']
-FEATURE_DIM = cfg['FEATURE_DIM']
+FEATURE_DIM1 = cfg['FEATURE_DIM1']
+FEATURE_DIM2 = cfg['FEATURE_DIM2']
 EPOCHS = cfg['EPOCHS']
 LEARNING_RATE = cfg['LEARNING_RATE']
 BATCH_SIZE = cfg['BATCH_SIZE']
@@ -34,7 +35,7 @@ train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True
 test_dataloader  = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 # NN model
-model = CNN_Transformer(feature_dim=FEATURE_DIM, num_cycles=NUM_CYCLES).to(device)
+model = CNN_Transformer(feature_dim1=FEATURE_DIM1,feature_dim2=FEATURE_DIM2, num_cycles=NUM_CYCLES).to(device)
 
 # Loss function and optimizer
 criterion = nn.MSELoss()
@@ -43,7 +44,7 @@ optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 # Training loop
 best_loss = float('inf')
 model.train()
-
+Loss_log = []
 t_range = trange(EPOCHS)
 for epoch in t_range:
     train_losses = []
@@ -66,7 +67,7 @@ for epoch in t_range:
             predicted_outputs = model(inputs, outputs[:,:-1])
             test_loss = criterion(predicted_outputs, outputs[:,-1].unsqueeze(-1))
             test_losses.append(test_loss.item())
-
+    Loss_log.append([np.mean(train_losses),np.mean(test_losses)])
     # Print the loss for monitoring after each epoch
     t_range.set_description(f"train loss: {np.mean(train_losses)}, test loss: {np.mean(test_losses)}")
     t_range.refresh()
@@ -74,4 +75,15 @@ for epoch in t_range:
     # Check if the current loss is the best so far
     if np.mean(test_losses) < best_loss:
         best_loss = np.mean(test_losses)
-        torch.save(model, 'trained_model.pt')
+        best_loss_text = str(best_loss).split('.')
+        best_loss_text = best_loss_text[1]
+        torch.save(model, f'models/trained_model{best_loss_text[0:6]}.pt')
+        
+Loss_log = np.array(Loss_log)
+plt.plot(Loss_log[:,0])
+plt.plot(Loss_log[:,1])
+plt.legend(["Train Loss","Test Loss"])
+plt.grid("on")
+plt.xlabel("Step")
+plt.ylabel("Loss")
+plt.show()
