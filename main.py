@@ -44,7 +44,7 @@ optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 # Training loop
 best_loss = float('inf')
 model.train()
-
+Loss_log = []
 t_range = trange(EPOCHS)
 for epoch in t_range:
     train_losses = []
@@ -67,7 +67,7 @@ for epoch in t_range:
             predicted_outputs = model(inputs, outputs[:,:-1])
             test_loss = criterion(predicted_outputs, outputs[:,-1].unsqueeze(-1))
             test_losses.append(test_loss.item())
-
+    Loss_log.append([np.mean(train_losses),np.mean(test_losses)])
     # Print the loss for monitoring after each epoch
     t_range.set_description(f"train loss: {np.mean(train_losses)}, test loss: {np.mean(test_losses)}")
     t_range.refresh()
@@ -79,3 +79,11 @@ for epoch in t_range:
         best_loss_text = best_loss_text[1]
         torch.save(model, f'trained_model{best_loss_text[:5]}.pt')
         
+Loss_log = np.array(Loss_log)
+plt.plot(Loss_log[:,0])
+plt.plot(Loss_log[:,1])
+plt.legend(["Train Loss","Test Loss"])
+plt.grid("on")
+plt.xlabel("Step")
+plt.ylabel("Loss")
+plt.show()
