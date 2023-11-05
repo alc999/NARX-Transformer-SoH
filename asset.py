@@ -1,4 +1,6 @@
+import numpy as np
 import matplotlib.pyplot as plt
+import torch
 
 def plot_capacity_sequence(model, battery_dict, num_cycles):
     for name in battery_dict:
@@ -18,3 +20,31 @@ def plot_capacity_sequence(model, battery_dict, num_cycles):
         plt.plot(soh_preds)
         plt.show()
         break
+
+def plot_predicted_capacity(model, train_dataset, test_dataset):
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    battery_types = train_dataset.battery_data[:,0]
+
+    for battery_type in np.unique(battery_types):
+        train_data = train_dataset.battery_data[train_dataset.battery_data[:,0] == battery_type]
+        test_data = test_dataset.battery_data[test_dataset.battery_data[:,0] == battery_type]
+        
+        train_caps = [c[-1] for c in train_data[:,-1]]
+        test_caps = [c[-1] for c in test_data[:,-1]]
+        pred_caps = [test_data[:,-1][0][-1], test_data[:,-1][1][-1]]
+        for t_data in test_data:
+            _, inputs, _ = t_data
+            inputs = torch.tensor(inputs).float().unsqueeze(0).to(device)
+            outputs = torch.tensor(pred_caps[-2:]).float().unsqueeze(0).to(device)
+            # outputs = torch.tensor(outputs).float().unsqueeze(0).to(device)
+            pred = model(inputs, outputs)
+            pred_caps.append(pred.item())
+
+        plt.plot(train_caps+[test_caps[0]], 'blue')
+        plt.plot(range(len(train_caps),len(train_caps)+len(test_caps)), test_caps, 'green')
+        plt.plot(range(len(train_caps),len(train_caps)+len(pred_caps)), pred_caps, 'red')
+        plt.grid('on')
+        plt.legend(['Real','Label','Predicted'])
+        plt.xlabel('Cycle Number')
+        plt.ylabel('SoH (%)')
+        plt.show()
