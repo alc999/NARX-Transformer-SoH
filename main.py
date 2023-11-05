@@ -77,7 +77,7 @@ for epoch in t_range:
         best_loss = np.mean(test_losses)
         best_loss_text = str(best_loss).split('.')
         best_loss_text = best_loss_text[1]
-        torch.save(model, f'models/trained_model{best_loss_text[1:6]}.pt')
+        torch.save(model, f'models/trained_model{best_loss_text[0:6]}.pt')
         
 Loss_log = np.array(Loss_log)
 plt.plot(Loss_log[:,0])
