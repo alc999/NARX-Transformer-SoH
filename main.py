@@ -18,7 +18,8 @@ with open('config.yaml', 'r') as file:
 
 # # Access the variables
 NUM_CYCLES = cfg['NUM_CYCLES']
-FEATURE_DIM = cfg['FEATURE_DIM']
+FEATURE_DIM1 = cfg['FEATURE_DIM1']
+FEATURE_DIM2 = cfg['FEATURE_DIM2']
 EPOCHS = cfg['EPOCHS']
 LEARNING_RATE = cfg['LEARNING_RATE']
 BATCH_SIZE = cfg['BATCH_SIZE']
@@ -34,7 +35,7 @@ train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True
 test_dataloader  = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 # NN model
-model = CNN_Transformer(feature_dim=FEATURE_DIM, num_cycles=NUM_CYCLES).to(device)
+model = CNN_Transformer(feature_dim1=FEATURE_DIM1,feature_dim2=FEATURE_DIM2, num_cycles=NUM_CYCLES).to(device)
 
 # Loss function and optimizer
 criterion = nn.MSELoss()
