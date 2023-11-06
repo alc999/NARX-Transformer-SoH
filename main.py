@@ -29,7 +29,7 @@ BATCH_SIZE = cfg['BATCH_SIZE']
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Load data
-train_dataset, test_dataset = load_NASA(folder='NASA_DATA', num_cycles=3, split_ratio=0.3, scale_data=True)
+train_dataset, test_dataset = load_NASA(folder='NASA_DATA', num_cycles=10, split_ratio=0.3, scale_data=True)
 
 # Train/test split
 train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
@@ -39,7 +39,7 @@ test_dataloader  = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True)
 model = CNN_Transformer(feature_dim1=FEATURE_DIM1, feature_dim2=FEATURE_DIM2, num_attention=NUM_ATTENTION, num_cycles=NUM_CYCLES).to(device)
 
 # Loss function and optimizer
-criterion = nn.MSELoss()
+criterion = nn.MAELoss()
 optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
 # Training loop
