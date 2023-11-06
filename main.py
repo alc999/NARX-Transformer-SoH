@@ -20,6 +20,7 @@ with open('config.yaml', 'r') as file:
 NUM_CYCLES = cfg['NUM_CYCLES']
 FEATURE_DIM1 = cfg['FEATURE_DIM1']
 FEATURE_DIM2 = cfg['FEATURE_DIM2']
+NUM_ATTENTION = cfg['NUM_ATTENTION']
 EPOCHS = cfg['EPOCHS']
 LEARNING_RATE = cfg['LEARNING_RATE']
 BATCH_SIZE = cfg['BATCH_SIZE']
@@ -28,14 +29,14 @@ BATCH_SIZE = cfg['BATCH_SIZE']
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Load data
-train_dataset, test_dataset = load_NASA(folder='NASA_DATA', num_cycles=3, split_ratio=0.2, scale_data=True)
+train_dataset, test_dataset = load_NASA(folder='NASA_DATA', num_cycles=3, split_ratio=0.3, scale_data=True)
 
 # Train/test split
 train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 test_dataloader  = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 # NN model
-model = CNN_Transformer(feature_dim1=FEATURE_DIM1,feature_dim2=FEATURE_DIM2, num_cycles=NUM_CYCLES).to(device)
+model = CNN_Transformer(feature_dim1=FEATURE_DIM1, feature_dim2=FEATURE_DIM2, num_attention=NUM_ATTENTION, num_cycles=NUM_CYCLES).to(device)
 
 # Loss function and optimizer
 criterion = nn.MSELoss()
