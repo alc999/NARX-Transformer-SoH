@@ -2,10 +2,11 @@ import torch
 import torch.nn as nn
 
 class CNN_Transformer(nn.Module):
-    def __init__(self, feature_dim1,feature_dim2, num_attention, num_cycles):
+    def __init__(self, feature_dim1,feature_dim2, num_attention, num_cycles, num_preds):
         super(CNN_Transformer, self).__init__()
-
-        self.cap_linear_layer = nn.Linear(num_cycles-1, feature_dim2)
+        self.num_cycles = num_cycles
+        self.num_preds = num_preds
+        self.cap_linear_layer = nn.Linear(self.num_cycles-1, feature_dim2)
         self.final_linear_layer = nn.Linear(feature_dim2, 1)
 
         # self.conv_layer = nn.Conv1d(3, 512, kernel_size=16, stride=8)
@@ -27,6 +28,13 @@ class CNN_Transformer(nn.Module):
         output_cap = self.final_linear_layer(decoded_data)
         return output_cap
     
+    def pred_sequence(self, my_data, capacity):
+        pred_caps = torch.stack([capacity[:,0], capacity[:,1]], axis=-1)
+        for cycle in range(self.num_preds):
+            pred = self.forward(my_data[:,cycle:cycle+self.num_cycles], pred_caps[:,-self.num_cycles+1:])
+            pred_caps = torch.cat([pred_caps, pred], axis=-1)
+        return pred_caps
+
 
 class GRU_CNN(nn.Module):
     def __init__(self):

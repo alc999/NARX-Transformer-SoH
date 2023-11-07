@@ -18,6 +18,7 @@ with open('config.yaml', 'r') as file:
 
 # # Access the variables
 NUM_CYCLES = cfg['NUM_CYCLES']
+NUM_PREDS = cfg['NUM_PREDS']
 FEATURE_DIM1 = cfg['FEATURE_DIM1']
 FEATURE_DIM2 = cfg['FEATURE_DIM2']
 NUM_ATTENTION = cfg['NUM_ATTENTION']
@@ -29,14 +30,18 @@ BATCH_SIZE = cfg['BATCH_SIZE']
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Load data
-train_dataset, test_dataset = load_NASA(folder='NASA_DATA', num_cycles=10, split_ratio=0.3, scale_data=True)
+train_dataset, test_dataset = load_NASA(folder='NASA_DATA', num_cycles=NUM_CYCLES+NUM_PREDS-1, split_ratio=0.3, scale_data=True)
 
 # Train/test split
 train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 test_dataloader  = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 # NN model
-model = CNN_Transformer(feature_dim1=FEATURE_DIM1, feature_dim2=FEATURE_DIM2, num_attention=NUM_ATTENTION, num_cycles=NUM_CYCLES).to(device)
+model = CNN_Transformer(feature_dim1=FEATURE_DIM1, 
+                        feature_dim2=FEATURE_DIM2, 
+                        num_attention=NUM_ATTENTION, 
+                        num_cycles=NUM_CYCLES, 
+                        num_preds=NUM_PREDS).to(device)
 
 # Loss function and optimizer
 criterion = nn.MAELoss()
@@ -52,10 +57,10 @@ for epoch in t_range:
     for inputs, outputs in train_dataloader:
         inputs = inputs.float().to(device)
         outputs = outputs.float().to(device)
-        predicted_outputs = model(inputs, outputs[:,:-1])
+        predicted_outputs = model.pred_sequence(inputs, outputs)
 
         optimizer.zero_grad()
-        loss = criterion(predicted_outputs, outputs[:,-1].unsqueeze(-1))
+        loss = criterion(predicted_outputs[:,NUM_CYCLES-1:], outputs[:,NUM_CYCLES-1:])
         loss.backward()
         optimizer.step()
         train_losses.append(loss.item())
@@ -65,8 +70,8 @@ for epoch in t_range:
         inputs = inputs.float().to(device)
         outputs = outputs.float().to(device)
         with torch.no_grad():
-            predicted_outputs = model(inputs, outputs[:,:-1])
-            test_loss = criterion(predicted_outputs, outputs[:,-1].unsqueeze(-1))
+            predicted_outputs = model.pred_sequence(inputs, outputs)
+            test_loss = criterion(predicted_outputs[:,NUM_CYCLES-1:], outputs[:,NUM_CYCLES-1:])
             test_losses.append(test_loss.item())
     Loss_log.append([np.mean(train_losses),np.mean(test_losses)])
     # Print the loss for monitoring after each epoch
