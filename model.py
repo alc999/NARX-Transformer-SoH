@@ -29,7 +29,7 @@ class CNN_Transformer(nn.Module):
         return output_cap
     
     def pred_sequence(self, my_data, capacity):
-        pred_caps = torch.stack([capacity[:,0], capacity[:,1]], axis=-1)
+        pred_caps = torch.stack([capacity[:,i] for i in range(self.num_cycles-1)], axis=-1)
         for cycle in range(self.num_preds):
             pred = self.forward(my_data[:,cycle:cycle+self.num_cycles], pred_caps[:,-self.num_cycles+1:])
             pred_caps = torch.cat([pred_caps, pred], axis=-1)
