@@ -31,9 +31,9 @@ def plot_predicted_capacity(model, train_dataset, test_dataset, num_cycles):
         
         train_caps = [c[-1] for c in train_data[:,-1]]
         test_caps = [c[-1] for c in test_data[:,-1]]
-        pred_caps = [test_data[:,-1][i][-1] for i in range(num_cycles-1)]
+        pred_caps = [train_data[:,-1][i][-1] for i in np.arange(-num_cycles+1,0)]
         
-        for cycle in range(len(test_data)-num_cycles+1):
+        for cycle in range(len(test_data)):
             _, inputs, _ = test_data[cycle]
             inputs = torch.tensor(inputs[:num_cycles]).float().unsqueeze(0).to(device)
             outputs = torch.tensor(pred_caps[-num_cycles+1:]).float().unsqueeze(0).to(device)
@@ -42,7 +42,7 @@ def plot_predicted_capacity(model, train_dataset, test_dataset, num_cycles):
         
         plt.plot(train_caps+[test_caps[0]], 'blue')
         plt.plot(range(len(train_caps),len(train_caps)+len(test_caps)), test_caps, c='olive')
-        plt.plot(range(len(train_caps),len(train_caps)+len(pred_caps)), pred_caps, '--', c='red')
+        plt.plot(range(len(train_caps),len(train_caps)+len(pred_caps)-num_cycles+1), pred_caps[num_cycles-1:], '--', c='red')
         plt.grid('on')
         plt.legend(['Real','Label','Predicted'])
         plt.xlabel('Cycle Number')
