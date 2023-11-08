@@ -21,7 +21,7 @@ def plot_capacity_sequence(model, battery_dict, num_cycles):
         plt.show()
         break
 
-def plot_predicted_capacity(model, train_dataset, test_dataset):
+def plot_predicted_capacity(model, train_dataset, test_dataset, num_cycles):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     battery_types = train_dataset.battery_data[:,0]
 
@@ -31,18 +31,18 @@ def plot_predicted_capacity(model, train_dataset, test_dataset):
         
         train_caps = [c[-1] for c in train_data[:,-1]]
         test_caps = [c[-1] for c in test_data[:,-1]]
-        pred_caps = [test_data[:,-1][0][-1], test_data[:,-1][1][-1]]
-        for t_data in test_data:
-            _, inputs, _ = t_data
-            inputs = torch.tensor(inputs).float().unsqueeze(0).to(device)
-            outputs = torch.tensor(pred_caps[-2:]).float().unsqueeze(0).to(device)
-            # outputs = torch.tensor(outputs).float().unsqueeze(0).to(device)
+        pred_caps = [test_data[:,-1][i][-1] for i in range(num_cycles-1)]
+        
+        for cycle in range(len(test_data)-num_cycles+1):
+            _, inputs, _ = test_data[cycle]
+            inputs = torch.tensor(inputs[:num_cycles]).float().unsqueeze(0).to(device)
+            outputs = torch.tensor(pred_caps[-num_cycles+1:]).float().unsqueeze(0).to(device)
             pred = model(inputs, outputs)
             pred_caps.append(pred.item())
-
+        
         plt.plot(train_caps+[test_caps[0]], 'blue')
-        plt.plot(range(len(train_caps),len(train_caps)+len(test_caps)), test_caps, 'green')
-        plt.plot(range(len(train_caps),len(train_caps)+len(pred_caps)), pred_caps, 'red')
+        plt.plot(range(len(train_caps),len(train_caps)+len(test_caps)), test_caps, c='olive')
+        plt.plot(range(len(train_caps),len(train_caps)+len(pred_caps)), pred_caps, '--', c='red')
         plt.grid('on')
         plt.legend(['Real','Label','Predicted'])
         plt.xlabel('Cycle Number')
