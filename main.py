@@ -80,12 +80,13 @@ for epoch in t_range:
 
     # Check if the current loss is the best so far
     if np.mean(test_losses) < best_loss:
+        best_epoch = epoch
         best_loss = np.mean(test_losses)
         torch.save(model, f'models/trained_model_{best_loss:.6f}_{epoch}.pt')
         
 Loss_log = np.array(Loss_log)
-plt.plot(Loss_log[:,0])
-plt.plot(Loss_log[:,1])
+plt.plot(Loss_log[:best_epoch,0])
+plt.plot(Loss_log[:best_epoch,1])
 plt.legend(["Train Loss","Test Loss"])
 plt.grid("on")
 plt.xlabel("Step")
