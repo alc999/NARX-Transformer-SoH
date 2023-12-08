@@ -81,9 +81,7 @@ for epoch in t_range:
     # Check if the current loss is the best so far
     if np.mean(test_losses) < best_loss:
         best_loss = np.mean(test_losses)
-        best_loss_text = str(best_loss).split('.')
-        best_loss_text = best_loss_text[1]
-        torch.save(model, f'models/trained_model_{best_loss_text[0:6]}_{epoch}.pt')
+        torch.save(model, f'models/trained_model_{best_loss:.6f}_{epoch}.pt')
         
 Loss_log = np.array(Loss_log)
 plt.plot(Loss_log[:,0])
