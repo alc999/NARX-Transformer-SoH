@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 from glob import glob
 from tqdm import tqdm, trange
 import yaml
+import os
+import seaborn as sns
+sns.set_theme()
 
 import torch
 import torch.nn as nn
@@ -44,13 +47,15 @@ model = CNN_Transformer(feature_dim1=FEATURE_DIM1,
                         num_preds=NUM_PREDS).to(device)
 
 # Loss function and optimizer
-criterion = nn.MAELoss()
+criterion = nn.L1Loss()
 optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
 # Training loop
+best_epoch = 0
 best_loss = float('inf')
-model.train()
 Loss_log = []
+os.makedirs('models', exist_ok=True)
+model.train()
 t_range = trange(EPOCHS)
 for epoch in t_range:
     train_losses = []
@@ -82,11 +87,11 @@ for epoch in t_range:
     if np.mean(test_losses) < best_loss:
         best_epoch = epoch
         best_loss = np.mean(test_losses)
-        torch.save(model, f'models/trained_model_{best_loss:.6f}_{epoch}.pt')
+        torch.save(model, f'models/trained_model_{best_loss:.6f}_{best_epoch}.pt')
         
 Loss_log = np.array(Loss_log)
-plt.plot(Loss_log[:best_epoch,0])
-plt.plot(Loss_log[:best_epoch,1])
+plt.plot(Loss_log[0,:best_epoch])
+plt.plot(Loss_log[1,:best_epoch])
 plt.legend(["Train Loss","Test Loss"])
 plt.grid("on")
 plt.xlabel("Step")
