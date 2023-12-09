@@ -90,6 +90,9 @@ for epoch in t_range:
         torch.save(model, f'models/trained_model_{best_loss:.6f}_{best_epoch}.pt')
         
 Loss_log = np.array(Loss_log)
+np.save(f'models/training_log_{NUM_CYCLES}_{NUM_PREDS}.npy', Loss_log)
+
+plt.figure(figsize=(8,5))
 plt.plot(Loss_log[0,:best_epoch])
 plt.plot(Loss_log[1,:best_epoch])
 plt.legend(["Train Loss","Test Loss"])
