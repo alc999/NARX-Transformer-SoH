@@ -33,7 +33,7 @@ BATCH_SIZE = cfg['BATCH_SIZE']
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Load data
-train_dataset, test_dataset = load_NASA(folder='NASA_DATA', num_cycles=NUM_CYCLES+NUM_PREDS-1, split_ratio=0.3, scale_data=True)
+train_dataset, test_dataset = load_NASA(folder='NASA_DATA', num_cycles=NUM_CYCLES+NUM_PREDS-1, split_ratio=0.5, scale_data=True)
 
 # Train/test split
 train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)

@@ -1,14 +1,14 @@
 # Configuration file in YAML format
 
 # Dataset settings
-NUM_CYCLES: 3
-NUM_PREDS: 7
-FEATURE_DIM1: 6
-FEATURE_DIM2: 6
-NUM_ATTENTION: 3
+NUM_CYCLES: 5
+NUM_PREDS: 5
+FEATURE_DIM1: 16
+FEATURE_DIM2: 16
+NUM_ATTENTION: 16
 
 # Training settings
-EPOCHS: 2
+EPOCHS: 2000
 LEARNING_RATE: 0.001
 
 # Other settings
