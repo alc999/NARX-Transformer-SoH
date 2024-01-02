@@ -13,4 +13,4 @@ LEARNING_RATE: 0.001
 
 # Other settings
 BATCH_SIZE: 32
-USE_GPU: true
+USE_GPU: True
