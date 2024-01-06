@@ -30,30 +30,32 @@ def plot_predicted_capacity(model, train_dataset, test_dataset, num_cycles):
     for battery_type in np.unique(battery_types):
         train_data = train_dataset.battery_data[train_dataset.battery_data[:,0] == battery_type]
         test_data = test_dataset.battery_data[test_dataset.battery_data[:,0] == battery_type]
-        
-        train_caps = [c[-1] for c in train_data[:,-1]]
-        test_caps = [c[-1] for c in test_data[:,-1]]
-        pred_caps = [train_data[:,-1][i][-1] for i in np.arange(-num_cycles+1,0)]
-        
-        for cycle in range(len(test_data)):
-            _, inputs, _ = test_data[cycle]
-            inputs = torch.tensor(inputs[:num_cycles]).float().unsqueeze(0).to(device)
-            outputs = torch.tensor(pred_caps[-num_cycles+1:]).float().unsqueeze(0).to(device)
-            pred = model(inputs, outputs)
-            pred_caps.append(pred.item())
-        
-        evaluations.append([battery_type, np.array(test_caps), np.array(pred_caps[num_cycles-1:])])
+        try:
+            train_caps = [c[-1] for c in train_data[:,-1]]
+            test_caps = [c[-1] for c in test_data[:,-1]]
+            pred_caps = [train_data[:,-1][i][-1] for i in np.arange(-num_cycles+1,0)]
+            
+            for cycle in range(len(test_data)):
+                _, inputs, _ = test_data[cycle]
+                inputs = torch.tensor(inputs[:num_cycles]).float().unsqueeze(0).to(device)
+                outputs = torch.tensor(pred_caps[-num_cycles+1:]).float().unsqueeze(0).to(device)
+                pred = model(inputs, outputs)
+                pred_caps.append(pred.item())
+            
+            evaluations.append([battery_type, np.array(test_caps), np.array(pred_caps[num_cycles-1:])])
 
-        plt.figure(figsize=(8,5))
-        plt.plot(train_caps+[test_caps[0]])
-        plt.plot(range(len(train_caps),len(train_caps)+len(test_caps)), test_caps, c='olive')
-        plt.plot(range(len(train_caps),len(train_caps)+len(pred_caps)-num_cycles+1), pred_caps[num_cycles-1:], '--', c='red')
-        plt.grid('on')
-        plt.title(battery_type, fontsize=15)
-        plt.legend(['_','Real data','Prediction'], loc='upper right')
-        plt.xlabel('Cycle')
-        plt.ylabel('Battery SoH (%)')
-        plt.show()
+            plt.figure(figsize=(8,5))
+            plt.plot(train_caps+[test_caps[0]])
+            plt.plot(range(len(train_caps),len(train_caps)+len(test_caps)), test_caps, c='olive')
+            plt.plot(range(len(train_caps),len(train_caps)+len(pred_caps)-num_cycles+1), pred_caps[num_cycles-1:], '--', c='red')
+            plt.grid('on')
+            plt.title(battery_type, fontsize=20)
+            plt.legend(['_','Real data','Prediction'], loc='upper right')
+            plt.xlabel('Cycle', fontsize=15)
+            plt.ylabel('Battery SoH (%)', fontsize=15)
+            plt.show()
+        except:
+            pass
 
     return evaluations
 
