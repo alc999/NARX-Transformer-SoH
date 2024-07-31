@@ -43,7 +43,7 @@ def load_raw_data(folder, scale_data=True):
     return battery_dict
 
 def sequential_train_test_split(battery_data, split_ratio):
-    battery_data = np.array(battery_data)
+    battery_data = np.array(battery_data, dtype=object)
     battery_types = battery_data[:,0]
 
     train_data = []
