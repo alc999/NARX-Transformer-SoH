@@ -1,19 +1,16 @@
-# LIB-SoH-Transformer
-<img width="893" alt="model structure" src="https://github.com/amirhosseinh77/Battery-SoH-Transformer/assets/56114938/eabe781c-7cae-478a-9dc2-c4275f92e01d">
+# LIB-SoH-NARX-Transformer
+![Model Structure](https://github.com/user-attachments/assets/c45def5a-09f5-4d6b-aa99-6d0a1707f7ed)
 
-### To-Do
-- [x] Model Training
-- [x] Data Visualization
-- [x] Model Structure
-- [ ] Avoid Noisy Output
-
-### Model Structures
-| Conv | Transformer | Train Loss | Test Loss | B0018 |
-| --- | --- | --- | --- | --- |
-| 16 | 16 | 4e-5 | 2e-4 | - |
-
-### Reference
-1. Fan, Y., Xiao, F., Li, C., Yang, G., & Tang, X. (2020). A novel deep learning framework for state of health estimation of lithium-ion battery. Journal of Energy Storage, 32, 101741.
-2. Gu, X., See, K. W., Li, P., Shan, K., Wang, Y., Zhao, L., ... & Zhang, N. (2023). A novel state-of-health estimation for the lithium-ion battery using a convolutional neural network and transformer model. Energy, 262, 125501.
+## Citation
+```python
+@ARTICLE{10680610,
+  author={Ardakani, Amirhossein Heydarian and Abdollahian, Seyed Ali and Abdollahi, Farzaneh},
+  journal={IEEE Transactions on Instrumentation and Measurement}, 
+  title={NARX Transformer: A Dynamic Model for Leveraging Multicycle Data in Long-Term Battery State of Health Estimation}, 
+  year={2024},
+  volume={73},
+  pages={1-8},
+}
+```
 
 
