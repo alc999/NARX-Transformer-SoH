@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 
-class CNN_Transformer(nn.Module):
+class NARX_Transformer(nn.Module):
     def __init__(self, feature_dim1,feature_dim2, num_attention, num_cycles, num_preds):
-        super(CNN_Transformer, self).__init__()
+        super(NARX_Transformer, self).__init__()
         self.num_cycles = num_cycles
         self.num_preds = num_preds
         self.cap_linear_layer = nn.Linear(self.num_cycles-1, feature_dim2)
