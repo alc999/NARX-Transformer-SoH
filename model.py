@@ -44,36 +44,36 @@ class GRU_CNN(nn.Module):
             nn.Conv1d(3, 64, kernel_size=32, padding='same'),
             nn.BatchNorm1d(64),
             nn.ReLU(),
-            nn.MaxPool1d(kernel_size=2, padding="same"),
+            nn.MaxPool1d(kernel_size=2),
             
             nn.Conv1d(64, 64, kernel_size=32, padding='same'),
             nn.BatchNorm1d(64),
             nn.ReLU(),
-            nn.MaxPool1d(kernel_size=2, padding="same"),
+            nn.MaxPool1d(kernel_size=2),
             
             nn.Conv1d(64, 64, kernel_size=32, padding='same'),
             nn.BatchNorm1d(64),
             nn.ReLU(),
-            nn.MaxPool1d(kernel_size=2, padding="same"),
+            nn.MaxPool1d(kernel_size=2),
             
             nn.Conv1d(64, 64, kernel_size=32, padding='same'),
             nn.BatchNorm1d(64),
             nn.ReLU(),
-            nn.MaxPool1d(kernel_size=2, padding="same"),
+            nn.MaxPool1d(kernel_size=2),
             
             nn.Conv1d(64, 64, kernel_size=32, padding='same'),
             nn.BatchNorm1d(64),
             nn.ReLU(),
-            nn.MaxPool1d(kernel_size=2, padding="same"),
+            nn.MaxPool1d(kernel_size=2),
             
             nn.Conv1d(64, 64, kernel_size=32, padding='same'),
             nn.BatchNorm1d(64),
             nn.ReLU(),
-            nn.MaxPool1d(kernel_size=2, padding="same")
+            nn.MaxPool1d(kernel_size=2)
         )
 
         self.flatten = nn.Flatten()
-        self.dense1 = nn.Linear(64, 64)
+        self.dense1 = nn.Linear(256, 64)
 
         self.gru = nn.GRU(3, 256, batch_first=True)
         self.dense2 = nn.Linear(256, 64)
@@ -85,7 +85,7 @@ class GRU_CNN(nn.Module):
         x1 = self.flatten(x1)
         x1 = self.dense1(x1)
 
-        _, x2 = self.gru(input_stream)
+        _, x2 = self.gru(input_stream.permute(0, 2, 1))
         x2 = x2.squeeze(0)
         x2 = self.dense2(x2)
 

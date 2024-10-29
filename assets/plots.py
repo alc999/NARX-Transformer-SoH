@@ -61,7 +61,7 @@ def plot_predicted_capacity(model, train_dataset, test_dataset, num_cycles):
 
 
 def plot_error_histogram(errors):
-    plt.figure(figsize=(8,5))
+    plt.figure(figsize=(8,4))
     plt.xlim([-0.1,0.1])
     counts, bins, _ = plt.hist(errors, bins=10, density=False, alpha=0.7, label='Error Distribution')
 

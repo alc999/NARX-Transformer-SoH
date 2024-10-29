@@ -12,7 +12,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-from model import CNN_Transformer
+from model import NARX_Transformer
 from dataset import load_NASA
 
 # Load the YAML configuration file
@@ -40,11 +40,11 @@ train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True
 test_dataloader  = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 # NN model
-model = CNN_Transformer(feature_dim1=FEATURE_DIM1, 
-                        feature_dim2=FEATURE_DIM2, 
-                        num_attention=NUM_ATTENTION, 
-                        num_cycles=NUM_CYCLES, 
-                        num_preds=NUM_PREDS).to(device)
+model = NARX_Transformer(feature_dim1=FEATURE_DIM1, 
+                         feature_dim2=FEATURE_DIM2, 
+                         num_attention=NUM_ATTENTION, 
+                         num_cycles=NUM_CYCLES, 
+                         num_preds=NUM_PREDS).to(device)
 
 # Loss function and optimizer
 criterion = nn.L1Loss()
@@ -55,6 +55,7 @@ best_epoch = 0
 best_loss = float('inf')
 Loss_log = []
 os.makedirs('models', exist_ok=True)
+
 model.train()
 t_range = trange(EPOCHS)
 for epoch in t_range:
@@ -79,6 +80,7 @@ for epoch in t_range:
             test_loss = criterion(predicted_outputs[:,NUM_CYCLES-1:], outputs[:,NUM_CYCLES-1:])
             test_losses.append(test_loss.item())
     Loss_log.append([np.mean(train_losses),np.mean(test_losses)])
+
     # Print the loss for monitoring after each epoch
     t_range.set_description(f"train loss: {np.mean(train_losses)}, test loss: {np.mean(test_losses)}")
     t_range.refresh()
@@ -88,7 +90,7 @@ for epoch in t_range:
         best_epoch = epoch
         best_loss = np.mean(test_losses)
         torch.save(model, f'models/trained_model_{best_loss:.6f}_{best_epoch}.pt')
-        
+
 Loss_log = np.array(Loss_log)
 np.save(f'models/training_log_{NUM_CYCLES}_{NUM_PREDS}.npy', Loss_log)
 

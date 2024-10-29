@@ -1,7 +1,7 @@
 # Configuration file in YAML format
 
 # Dataset settings
-NUM_CYCLES: 5
+NUM_CYCLES: 7
 NUM_PREDS: 7
 FEATURE_DIM1: 16
 FEATURE_DIM2: 16
